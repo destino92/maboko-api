@@ -1,0 +1,22 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "Shopify.ruby-lsp",
+  "rubyLsp.rubyVersionManager": "rbenv",
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true
+  },
+  // Strict Rubocop auto-correct
+  "ruby.lint": {
+    "rubocop": true
+  },
+  // Exclude massive generated files so the AI doesn't get confused
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/tmp": true,
+    "**/coverage": true,
+    "**/vendor": true
+  },
+  // Enable Copilot to read your current file + open tabs
+  "github.copilot.editor.enableAutoCompletions": true
+}
