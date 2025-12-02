@@ -10,7 +10,7 @@ gem "puma", ">= 5.0"
 # gem "jbuilder"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -33,7 +33,23 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
-# gem "rack-cors"
+gem "rack-cors"
+
+# JSON serialization (formatting API responses)
+gem "active_model_serializers", "~> 0.10.0"
+
+# Pagination (splitting large lists into pages)
+gem "pagy", "~> 9.0"
+
+# API documentation
+gem "rswag-api"      # Serves API documentation
+gem "rswag-ui"       # Pretty UI for API docs
+
+# Environment variables (for secrets)
+gem "dotenv-rails"   # Loads .env file
+
+# For Supabase Storage
+gem "supabase"  # Supabase Ruby client
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -47,4 +63,13 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem "rspec-rails", "~> 6.1"                # Testing framework
+  gem "factory_bot_rails"                    # Test data factories
+  gem "faker"                                # Fake data generator
+  gem "rswag-specs"                          # API testing + docs
+end
+
+group :test do
+  gem "shoulda-matchers", "~> 6.0"            # Testing helpers
+  gem "database_cleaner-active_record"        # Clean test database
 end
