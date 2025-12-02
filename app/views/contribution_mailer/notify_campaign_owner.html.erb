@@ -1,0 +1,18 @@
+<!-- app/views/contribution_mailer/notify_campaign_owner.html.erb -->
+<h1>New Contribution!</h1>
+
+<p>Hello <%= @campaign.creator.first_name %>,</p>
+
+<p>
+    Great news! <%= @contributor.full_name %> just contributed
+    <strong><%= number_to_currency(@contribution.amount) %></strong>
+    to your campaign "<%= @campaign.title %>".
+</p>
+
+<p>
+    Campaign Progress: <%= number_to_currency(@campaign.current_amount) %> /
+    <%= number_to_currency(@campaign.goal_amount) %>
+    (<%= @campaign.progress_percentage %>%)
+</p>
+
+<p>Thank you for using CrowdShare!</p>

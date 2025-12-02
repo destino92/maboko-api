@@ -1,0 +1,15 @@
+<!-- app/views/contribution_mailer/notify_contributor.html.erb -->
+<h1>Thank You for Your Contribution!</h1>
+
+<p>Hello <%= @contributor.first_name %>,</p>
+
+<p>
+    Thank you for contributing <strong><%= number_to_currency(@contribution.amount) %></strong>
+    to "<%= @campaign.title %>".
+</p>
+
+<p>Your support makes a difference!</p>
+
+<p>Campaign Creator: <%= @campaign.creator.full_name %></p>
+
+<p>Thank you for using CrowdShare!</p>
