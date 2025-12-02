@@ -1,6 +1,6 @@
 class Contribution < ApplicationRecord
   belongs_to :campaign
-  belongs_to :contributor
+  belongs_to :contributor, class_name: "User"
 
   # Enum for payment status
   enum :status, {

@@ -5,7 +5,7 @@ class CampaignComment < ApplicationRecord
   
   enum :comment_type, {
     comment: "comment",  # Regular comment from anyone
-    update: "update"     # Official update from campaign creator
+    campaign_update: "update"     # Official update from campaign creator
   }, default: :comment
   
   validates :content, 
@@ -13,7 +13,7 @@ class CampaignComment < ApplicationRecord
     length: { maximum: 5000 }
   
   # Only campaign creator can post updates
-  validate :updates_only_by_creator, if: :update?
+  validate :updates_only_by_creator, if: :campaign_update?
   
   private
   

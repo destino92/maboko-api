@@ -40,5 +40,29 @@ module MabokoApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # ActiveStorage configuration
+    config.active_storage.variant_processor = :vips
+
+    # Active Job configuration (Solid Queue)
+    config.active_job.queue_adapter = :solid_queue
+
+    # Cache configuration (Solid Cache)
+    config.cache_store = :solid_cache_store
+
+    # Generators configuration
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+      g.test_framework :rspec
+      g.factory_bot true
+      g.skip_routes true
+    end
+
+    # CORS
+    config.middleware.use Rack::Cors
+
+    # Time zone
+    config.time_zone = "UTC"
+    config.active_record.default_timezone = :utc
   end
 end

@@ -1,6 +1,6 @@
 class Campaign < ApplicationRecord
   # A campaign belongs to a creator (User)
-  belongs_to :creator
+  belongs_to :creator, class_name: "User"
   # A campaign belongs to a category
   belongs_to :category
   # A campaign has rich text description (uses Action Text)

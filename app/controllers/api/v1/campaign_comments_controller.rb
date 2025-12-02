@@ -30,7 +30,7 @@ module Api
 
         if comment.save
           # Notify subscribers if this is an update
-          notify_subscribers if comment.update?
+          notify_subscribers if comment.campaign_update?
           render json: CampaignCommentSerializer.new(comment).as_json, status: :created
         else
           render json: { errors: comment.errors.full_messages }, status: :unprocessable_entity
