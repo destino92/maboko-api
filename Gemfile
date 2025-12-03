@@ -72,4 +72,5 @@ end
 group :test do
   gem "shoulda-matchers", "~> 6.0"            # Testing helpers
   gem "database_cleaner-active_record"        # Clean test database
+  gem "sqlite3", "~> 2.0"
 end
