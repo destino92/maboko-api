@@ -2,5 +2,10 @@
 # exit on error
 set -o errexit
 
+echo "📦 Installing dependencies..."
 bundle install
-bundle exec rake db:migrate
+
+echo "🗄️  Running database migrations..."
+bundle exec rails db:migrate
+
+echo "✅ Build complete!"
