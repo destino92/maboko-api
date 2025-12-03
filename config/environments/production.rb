@@ -3,6 +3,9 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Don't require master key for credentials since we use environment variables
+  config.require_master_key = false
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 
@@ -91,4 +94,8 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Use SECRET_KEY_BASE environment variable or generate a dummy one for migrations
+  config.secret_key_base = ENV['SECRET_KEY_BASE'] ||
+    'dummy_secret_for_build_' + Digest::SHA256.hexdigest(Dir.pwd)
 end
