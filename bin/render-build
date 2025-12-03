@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# exit on error
+set -o errexit
+
+echo "📦 Installing dependencies..."
+bundle install
+
+echo "🗄️  Running database migrations..."
+bundle exec rails db:migrate
+
+echo "✅ Build complete!"
