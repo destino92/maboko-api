@@ -5,7 +5,6 @@ module Authentication
   included do
     # Before every action, try to resume the session
     before_action :require_authentication
-    helper_method :authenticated?
   end
 
   # Class methods (available on the controller class itself)
@@ -18,11 +17,6 @@ module Authentication
   end
 
   private
-    # Try to find and restore the user's session from their token
-    def authenticated?
-      resume_session
-    end
-
     # Extract token from Authorization header and find matching session
     # Expected header: "Authorization: Bearer abc123xyz"
     def find_session_by_token
@@ -41,37 +35,37 @@ module Authentication
     end
 
     # Return JSON error when not authenticated
-    def render_unauthorized
-      render json: { 
-        error: "Unauthorized", 
-        message: "You must be logged in to access this resource" 
+    def request_authentication
+      render json: {
+        error: "Unauthorized",
+        message: "You must be logged in to access this resource"
       }, status: :unauthorized
     end
 
     # Check if there's an authenticated user
-  def authenticated?
-    resume_session.present?
-  end
-  
-  # Get the current user (from Current.session.user)
-  def current_user
-    Current.user
-  end
-  
-  # Create a new session for a user (used after login/signup)
-  def start_new_session_for(user)
-    user.sessions.create!(
-      user_agent: request.user_agent,  # Browser/app info
-      ip_address: request.remote_ip    # User's IP address
-    ).tap do |session|
-      # Store in Current so it's available for this request
-      Current.session = session
+    def authenticated?
+      resume_session.present?
     end
-  end
-  
-  # Destroy the current session (logout)
-  def terminate_session
-    Current.session&.destroy
-    Current.session = nil
-  end
+
+    # Get the current user (from Current.session.user)
+    def current_user
+      Current.user
+    end
+
+    # Create a new session for a user (used after login/signup)
+    def start_new_session_for(user)
+      user.sessions.create!(
+        user_agent: request.user_agent,  # Browser/app info
+        ip_address: request.remote_ip    # User's IP address
+      ).tap do |session|
+        # Store in Current so it's available for this request
+        Current.session = session
+      end
+    end
+
+    # Destroy the current session (logout)
+    def terminate_session
+      Current.session&.destroy
+      Current.session = nil
+    end
 end
