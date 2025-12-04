@@ -8,7 +8,9 @@ bundle install
 echo "🗄️  Checking database connection..."
 echo "DEBUG: DATABASE_URL is set: $([ -z "$DATABASE_URL" ] && echo 'NO' || echo 'YES')"
 if [ -n "$DATABASE_URL" ]; then
-  echo "DEBUG: DATABASE_URL format: ${DATABASE_URL:0:30}... (showing first 30 chars)"
+  # Show more of the URL to see hostname and port (sanitize password)
+  SANITIZED_URL=$(echo "$DATABASE_URL" | sed -E 's/(:\/\/[^:]+:)[^@]+(@)/\1***\2/')
+  echo "DEBUG: DATABASE_URL = $SANITIZED_URL"
 fi
 
 if [ -z "$DATABASE_URL" ]; then
