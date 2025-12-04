@@ -26,6 +26,10 @@ else
     echo "⚠️  This might be a network/firewall issue on Render"
   fi
 
+  # Verify Rails can see DATABASE_URL
+  echo "🔍 Verifying Rails environment..."
+  bundle exec rails runner "puts \"Rails DATABASE_URL: #{ENV['DATABASE_URL']&.slice(0, 50)}...\"" 2>/dev/null || echo "⚠️  Could not run Rails runner"
+
   # Temporarily disable errexit for migration attempt
   set +e
   echo "🗄️  Running database migrations..."
