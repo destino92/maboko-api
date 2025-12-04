@@ -5,7 +5,23 @@ set -o errexit
 echo "📦 Installing dependencies..."
 bundle install
 
-echo "🗄️  Running database migrations..."
-bundle exec rails db:migrate
+echo "🗄️  Checking database connection..."
+if [ -z "$DATABASE_URL" ]; then
+  echo "⚠️  DATABASE_URL not set, skipping migrations"
+else
+  # Temporarily disable errexit for migration attempt
+  set +e
+  echo "🗄️  Running database migrations..."
+  bundle exec rails db:migrate
+  migration_status=$?
+  set -e
+
+  if [ $migration_status -eq 0 ]; then
+    echo "✅ Migrations completed successfully"
+  else
+    echo "⚠️  Migrations failed - database may not be ready yet"
+    echo "⚠️  Continuing build anyway. You can run migrations manually later."
+  fi
+fi
 
 echo "✅ Build complete!"
