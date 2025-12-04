@@ -17,6 +17,15 @@ if [ -z "$DATABASE_URL" ]; then
   echo "⚠️  DATABASE_URL not set, skipping migrations"
   echo "⚠️  Please set DATABASE_URL environment variable in Render"
 else
+  # Test database connection directly
+  echo "🔌 Testing database connection..."
+  if psql "$DATABASE_URL" -c "SELECT 1;" > /dev/null 2>&1; then
+    echo "✅ Database connection successful!"
+  else
+    echo "⚠️  Cannot connect to database directly"
+    echo "⚠️  This might be a network/firewall issue on Render"
+  fi
+
   # Temporarily disable errexit for migration attempt
   set +e
   echo "🗄️  Running database migrations..."
