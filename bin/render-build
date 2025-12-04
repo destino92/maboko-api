@@ -17,6 +17,32 @@ if [ -z "$DATABASE_URL" ]; then
   echo "⚠️  DATABASE_URL not set, skipping migrations"
   echo "⚠️  Please set DATABASE_URL environment variable in Render"
 else
+  # Extract database host from DATABASE_URL
+  DB_HOST=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+).*|\1|')
+  echo "🔍 Database host: $DB_HOST"
+
+  # Test if host is resolvable
+  echo "🌐 Testing DNS resolution..."
+  if host "$DB_HOST" > /dev/null 2>&1; then
+    echo "✅ DNS resolution successful"
+  else
+    echo "⚠️  Cannot resolve database hostname"
+    echo "⚠️  This might indicate a networking issue"
+  fi
+
+  # Test database connection directly
+  echo "🔌 Testing database connection with psql..."
+  if psql "$DATABASE_URL" -c "SELECT 1;" > /dev/null 2>&1; then
+    echo "✅ Database connection successful!"
+  else
+    echo "⚠️  Cannot connect to database with psql"
+    echo "⚠️  This might be a network/firewall issue on Render"
+  fi
+
+  # Verify Rails can see DATABASE_URL
+  echo "🔍 Verifying Rails environment..."
+  bundle exec rails runner "puts \"Rails DATABASE_URL: #{ENV['DATABASE_URL']&.slice(0, 50)}...\"" 2>/dev/null || echo "⚠️  Could not run Rails runner"
+
   # Temporarily disable errexit for migration attempt
   set +e
   echo "🗄️  Running database migrations..."
