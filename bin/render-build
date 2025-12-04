@@ -5,57 +5,5 @@ set -o errexit
 echo "📦 Installing dependencies..."
 bundle install
 
-echo "🗄️  Checking database connection..."
-echo "DEBUG: DATABASE_URL is set: $([ -z "$DATABASE_URL" ] && echo 'NO' || echo 'YES')"
-if [ -n "$DATABASE_URL" ]; then
-  # Show more of the URL to see hostname and port (sanitize password)
-  SANITIZED_URL=$(echo "$DATABASE_URL" | sed -E 's/(:\/\/[^:]+:)[^@]+(@)/\1***\2/')
-  echo "DEBUG: DATABASE_URL = $SANITIZED_URL"
-fi
-
-if [ -z "$DATABASE_URL" ]; then
-  echo "⚠️  DATABASE_URL not set, skipping migrations"
-  echo "⚠️  Please set DATABASE_URL environment variable in Render"
-else
-  # Extract database host from DATABASE_URL
-  DB_HOST=$(echo "$DATABASE_URL" | sed -E 's|.*@([^:/]+).*|\1|')
-  echo "🔍 Database host: $DB_HOST"
-
-  # Test if host is resolvable
-  echo "🌐 Testing DNS resolution..."
-  if host "$DB_HOST" > /dev/null 2>&1; then
-    echo "✅ DNS resolution successful"
-  else
-    echo "⚠️  Cannot resolve database hostname"
-    echo "⚠️  This might indicate a networking issue"
-  fi
-
-  # Test database connection directly
-  echo "🔌 Testing database connection with psql..."
-  if psql "$DATABASE_URL" -c "SELECT 1;" > /dev/null 2>&1; then
-    echo "✅ Database connection successful!"
-  else
-    echo "⚠️  Cannot connect to database with psql"
-    echo "⚠️  This might be a network/firewall issue on Render"
-  fi
-
-  # Verify Rails can see DATABASE_URL
-  echo "🔍 Verifying Rails environment..."
-  bundle exec rails runner "puts \"Rails DATABASE_URL: #{ENV['DATABASE_URL']&.slice(0, 50)}...\"" 2>/dev/null || echo "⚠️  Could not run Rails runner"
-
-  # Temporarily disable errexit for migration attempt
-  set +e
-  echo "🗄️  Running database migrations..."
-  bundle exec rails db:migrate
-  migration_status=$?
-  set -e
-
-  if [ $migration_status -eq 0 ]; then
-    echo "✅ Migrations completed successfully"
-  else
-    echo "⚠️  Migrations failed - database may not be ready yet"
-    echo "⚠️  Continuing build anyway. You can run migrations manually later."
-  fi
-fi
-
 echo "✅ Build complete!"
+echo "💡 Run 'rails db:migrate' in Render Shell to set up the database"
