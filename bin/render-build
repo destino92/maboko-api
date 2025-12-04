@@ -6,8 +6,14 @@ echo "📦 Installing dependencies..."
 bundle install
 
 echo "🗄️  Checking database connection..."
+echo "DEBUG: DATABASE_URL is set: $([ -z "$DATABASE_URL" ] && echo 'NO' || echo 'YES')"
+if [ -n "$DATABASE_URL" ]; then
+  echo "DEBUG: DATABASE_URL format: ${DATABASE_URL:0:30}... (showing first 30 chars)"
+fi
+
 if [ -z "$DATABASE_URL" ]; then
   echo "⚠️  DATABASE_URL not set, skipping migrations"
+  echo "⚠️  Please set DATABASE_URL environment variable in Render"
 else
   # Temporarily disable errexit for migration attempt
   set +e
