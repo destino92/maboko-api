@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: maboko-api
+    runtime: ruby
+    buildCommand: ./bin/render-build
+    startCommand: bundle exec puma -C config/puma.rb
+    # Run migrations after build, before deploying
+    # Note: This will use the runtime environment where DATABASE_URL should work
+    preDeployCommand: bundle exec rails db:migrate RAILS_ENV=production
+    envVars:
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: enabled
+      # Force PostgreSQL to use TCP instead of Unix socket
+      - key: PGHOST
+        sync: false
+      - key: PGPORT
+        value: "5432"
