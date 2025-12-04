@@ -5,9 +5,6 @@ module Authentication
   included do
     # Before every action, try to resume the session
     before_action :require_authentication
-
-    # Make these methods available to views
-    helper_method :authenticated?, :current_user
   end
 
   # Class methods (available on the controller class itself)
@@ -38,7 +35,7 @@ module Authentication
     end
 
     # Return JSON error when not authenticated
-    def render_unauthorized
+    def request_authentication
       render json: {
         error: "Unauthorized",
         message: "You must be logged in to access this resource"
